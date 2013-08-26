@@ -1,5 +1,5 @@
 angular
-  .module('myapp',[
-    <%=app.deps %>
-  ]);
+  .module('myapp',
+    <%- JSON.stringify(app.deps) %>
+  );
   

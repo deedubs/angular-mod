@@ -6,6 +6,6 @@ angular.module('ma:settings', [])
     $routeProvider
       .when('/settings', {
         controller: 'settings:show',
-        template: <%= template('views/show.jade') %>
+        template: <%- template('views/show.jade') %>
       });    
-  })
+  });

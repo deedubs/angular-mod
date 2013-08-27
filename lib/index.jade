@@ -1,0 +1,14 @@
+!!!
+html
+  head
+    title Sweet
+  body
+    h1 Mod-example
+    div(ng-view)
+
+    script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular.js")    
+    script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.js")    
+    script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-resource.js")    
+    script(src="index.js")
+    each dep in deps
+      script(src="/modules/" + dep + ".js")

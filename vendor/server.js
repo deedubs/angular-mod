@@ -16,13 +16,9 @@ app.locals.template = function (template) {
   return "'" + jade.render(fs.readFileSync(paths.join('/') + "/" + template)) + "'";
 }
 
-app.get('/', function (req, res) {
-  res.render('../index.jade', {deps: deps});  
-})
-
 app.get('/index.js', function (req, res) {
-  res.render('../index.js', {app: {
-    deps: deps.map(function (m) { return 'ma:' + m})
+  res.render('../lib/index.js', {app: {
+    deps: ['ngRoute','ngResource'].concat(deps.map(function (m) { return 'ma:' + m}))
   }})  
 })
 
@@ -32,4 +28,15 @@ deps.forEach(function (dep) {
   });
 })
 
+
+app.use(function (req, res) {
+  res.render('../lib/index.jade', {deps: deps});  
+})
+
 app.listen(3000);
+
+function updateDeps() {
+  deps = fs.readdirSync(__dirname + '/../modules');
+}
+
+setInterval(updateDeps, 500);

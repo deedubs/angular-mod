@@ -4,7 +4,9 @@ html
     title Sweet
   body
     h1 Mod-example
-    
+
+    script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular.min.js")    
+    script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js")    
     script(src="index.js")
     each dep in deps
       script(src="/modules/" + dep + ".js")

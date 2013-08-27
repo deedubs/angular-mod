@@ -5,7 +5,9 @@ var jade = require('jade');
 var stylus = require('stylus');
 var glob = require('glob');
 
-var deps = fs.readdirSync(__dirname + '/../modules')
+var deps;
+
+updateDeps();
 
 app.use(express.static('../'));
 
@@ -19,7 +21,7 @@ app.locals.template = function (template) {
 }
 
 app.get('/index.js', function (req, res) {
-  res.render('../lib/index.js', {app: {
+  res.render('../app/index.js', {app: {
     deps: ['ngRoute','ngResource'].concat(deps.map(function (m) { return 'ma:' + m}))
   }})  
 })
@@ -27,13 +29,14 @@ app.get('/index.js', function (req, res) {
 app.get('/index.css', function (req, res) {
   var compiler = stylus('').include(require('nib').path)
 
-  glob(__dirname + '/../modules/*/css/*.styl', function (err, stylusFiles) {
+  glob(__dirname + '/../app/modules/*/css/*.styl', function (err, stylusFiles) {
 
     stylusFiles.forEach( function (f) {
       compiler.import(f);
     })
     
     compiler.render(function (err, css) {
+      res.set('Content-Type', 'text/css');
       res.send(css);
     })
   })
@@ -41,19 +44,19 @@ app.get('/index.css', function (req, res) {
 
 deps.forEach(function (dep) {
   app.get('/modules/' + dep + '.js', function (req, res) {
-    res.render('../modules/' + dep + '/index.js');
+    res.render('../app/modules/' + dep + '/index.js');
   });
 })
 
 
 app.use(function (req, res) {
-  res.render('../lib/index.jade', {deps: deps});  
+  res.render('../app/index.jade', {deps: deps});  
 })
 
 app.listen(3000);
 
 function updateDeps() {
-  deps = fs.readdirSync(__dirname + '/../modules');
+  deps = fs.readdirSync(__dirname + '/../app/modules');
 }
 
 setInterval(updateDeps, 500);

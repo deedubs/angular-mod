@@ -2,6 +2,8 @@ var express = require('express')
 var app = express();
 var fs = require('fs');
 var jade = require('jade');
+var stylus = require('stylus');
+var glob = require('glob');
 
 var deps = fs.readdirSync(__dirname + '/../modules')
 
@@ -20,6 +22,21 @@ app.get('/index.js', function (req, res) {
   res.render('../lib/index.js', {app: {
     deps: ['ngRoute','ngResource'].concat(deps.map(function (m) { return 'ma:' + m}))
   }})  
+})
+
+app.get('/index.css', function (req, res) {
+  var compiler = stylus('').include(require('nib').path)
+
+  glob(__dirname + '/../modules/*/css/*.styl', function (err, stylusFiles) {
+
+    stylusFiles.forEach( function (f) {
+      compiler.import(f);
+    })
+    
+    compiler.render(function (err, css) {
+      res.send(css);
+    })
+  })
 })
 
 deps.forEach(function (dep) {
